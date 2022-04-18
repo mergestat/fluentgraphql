@@ -25,10 +25,10 @@ func main() {
 				fgql.NewStringValue("str2"),
 				fgql.NewStringValue("str3"),
 			)),
-			fgql.NewArgument("object", fgql.NewObjectValue(map[string]*fgql.Value{
-				"field1": fgql.NewStringValue("str1"),
-				"field2": fgql.NewIntValue(123),
-			})),
+			fgql.NewArgument("object", fgql.NewObjectValue(
+				fgql.NewObjectValueField("field1", fgql.NewStringValue("str1")),
+				fgql.NewObjectValueField("field1", fgql.NewIntValue(123)),
+			)),
 			fgql.NewArgument("var", fgql.NewVariableValue("someVar")),
 		)).
 		Scalar("patrick").Parent().
