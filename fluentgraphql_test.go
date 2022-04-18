@@ -64,10 +64,10 @@ func TestSelections(t *testing.T) {
 		},
 		"SingleScalarWithObjectArgument": {
 			wantedQuery: `{ hello(arg1: { val1: "a", val2: "b"}) }`,
-			selection: NewQuery().Scalar("hello", WithArguments(NewArgument("arg1", NewObjectValue(map[string]*Value{
-				"val1": NewStringValue("a"),
-				"val2": NewStringValue("b"),
-			})))),
+			selection: NewQuery().Scalar("hello", WithArguments(NewArgument("arg1", NewObjectValue(
+				NewObjectValueField("val1", NewStringValue("a")),
+				NewObjectValueField("val2", NewStringValue("b")),
+			)))),
 		},
 		"SingleScalarWithVariableArgument": {
 			wantedQuery: `{ hello(arg1: $var1) }`,

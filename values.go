@@ -71,14 +71,27 @@ func NewListValue(values ...*Value) *Value {
 	}
 }
 
+type objectValueField struct {
+	fieldName string
+	value     *Value
+}
+
+// NewObjectValueField returns a field for an object value
+func NewObjectValueField(fieldName string, value *Value) *objectValueField {
+	return &objectValueField{
+		fieldName: fieldName,
+		value:     value,
+	}
+}
+
 // NewObjectValue returns an object value
-func NewObjectValue(values map[string]*Value) *Value {
+func NewObjectValue(values ...*objectValueField) *Value {
 	fields := make([]*ast.ObjectField, 0, len(values))
 
-	for n, v := range values {
+	for _, f := range values {
 		fields = append(fields, ast.NewObjectField(&ast.ObjectField{
-			Name:  ast.NewName(&ast.Name{Value: n}),
-			Value: v.astValue,
+			Name:  ast.NewName(&ast.Name{Value: f.fieldName}),
+			Value: f.value.astValue,
 		}))
 	}
 
