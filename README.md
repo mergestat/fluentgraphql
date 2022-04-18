@@ -31,11 +31,15 @@ import (
 ```
 
 The package name is `fluentgraphql`, but we alias it here to `fgql` which is more concise.
+A query or mutation is started like so:
 
 ```golang
     q := fgql.NewQuery() // a new query builder
     m := fgql.NewMutation() // a new mutation builder
 ```
+
+A query can be constructed with calls to builder methods, such as in the following example.
+See [this file](https://github.com/mergestat/fluentgraphql/blob/main/examples/starwars/main.go) for more thorough examples.
 
 ```golang
 /*
