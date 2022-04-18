@@ -181,6 +181,7 @@ func (s *Selection) InlineFragment(typeCondition string) *Selection {
 	return newS
 }
 
+// Fragment adds a fragement definition
 func (s *Selection) Fragment(name, typeCondition string) *Selection {
 	newFrag := ast.NewFragmentDefinition((&ast.FragmentDefinition{
 		Name:          ast.NewName(&ast.Name{Value: name}),
@@ -199,6 +200,25 @@ func (s *Selection) Fragment(name, typeCondition string) *Selection {
 	}
 
 	return newS
+}
+
+// FragmentSpread adds a fragement spread
+func (s *Selection) FragmentSpread(name string) *Selection {
+	newFrag := ast.NewFragmentSpread((&ast.FragmentSpread{
+		Name: ast.NewName(&ast.Name{Value: name}),
+	}))
+	newS := &Selection{
+		parent: s,
+		node:   newFrag,
+	}
+	switch n := s.node.(type) {
+	case *ast.Field:
+		n.SelectionSet.Selections = append(n.SelectionSet.Selections, newS.node.(*ast.FragmentSpread))
+	case *ast.OperationDefinition:
+		n.SelectionSet.Selections = append(n.SelectionSet.Selections, newS.node.(*ast.FragmentSpread))
+	}
+
+	return s
 }
 
 // Parent returns the parent of this selection. If it's the root, will return nil.

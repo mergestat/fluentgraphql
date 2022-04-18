@@ -5,36 +5,36 @@ import (
 
 	"github.com/graphql-go/graphql/language/ast"
 	"github.com/graphql-go/graphql/language/printer"
-	fgl "github.com/mergestat/fluentgraphql"
+	fgql "github.com/mergestat/fluentgraphql"
 )
 
 func main() {
-	s := fgl.NewQuery(fgl.WithName("MyQuery"), fgl.WithVariableDefinitions(
-		fgl.NewVariableDefinition("var1", "string", false, fgl.NewBooleanValue(true)),
+	s := fgql.NewQuery(fgql.WithName("MyQuery"), fgql.WithVariableDefinitions(
+		fgql.NewVariableDefinition("var1", "string", false, fgql.NewBooleanValue(true)),
 	)).
-		Scalar("hello", fgl.WithAlias("alias")).
+		Scalar("hello", fgql.WithAlias("alias")).
 		Scalar("world").
-		Selection("object", fgl.WithArguments(
-			fgl.NewArgument("int", fgl.NewIntValue(123)),
-			fgl.NewArgument("float", fgl.NewFloatValue(123.102434)),
-			fgl.NewArgument("string", fgl.NewStringValue("string-arg")),
-			fgl.NewArgument("boolean", fgl.NewBooleanValue(false)),
-			fgl.NewArgument("enum", fgl.NewEnumValue("SOME_ENUM")),
-			fgl.NewArgument("list", fgl.NewListValue(
-				fgl.NewStringValue("str1"),
-				fgl.NewStringValue("str2"),
-				fgl.NewStringValue("str3"),
+		Selection("object", fgql.WithArguments(
+			fgql.NewArgument("int", fgql.NewIntValue(123)),
+			fgql.NewArgument("float", fgql.NewFloatValue(123.102434)),
+			fgql.NewArgument("string", fgql.NewStringValue("string-arg")),
+			fgql.NewArgument("boolean", fgql.NewBooleanValue(false)),
+			fgql.NewArgument("enum", fgql.NewEnumValue("SOME_ENUM")),
+			fgql.NewArgument("list", fgql.NewListValue(
+				fgql.NewStringValue("str1"),
+				fgql.NewStringValue("str2"),
+				fgql.NewStringValue("str3"),
 			)),
-			fgl.NewArgument("object", fgl.NewObjectValue(map[string]*fgl.Value{
-				"field1": fgl.NewStringValue("str1"),
-				"field2": fgl.NewIntValue(123),
+			fgql.NewArgument("object", fgql.NewObjectValue(map[string]*fgql.Value{
+				"field1": fgql.NewStringValue("str1"),
+				"field2": fgql.NewIntValue(123),
 			})),
-			fgl.NewArgument("var", fgl.NewVariableValue("someVar")),
+			fgql.NewArgument("var", fgql.NewVariableValue("someVar")),
 		)).
 		Scalar("patrick").Parent().
 		Selection("world").Scalar("hello").InlineFragment("User").Scalar("fragmentField").Selection("patrick").Scalar("devivo").
-		Root().Fragment("comparisonFields", "Character").Scalar("name").Selection("friendsConnection", fgl.WithArguments(
-		fgl.NewArgument("first", fgl.NewVariableValue("first")),
+		Root().Fragment("comparisonFields", "Character").Scalar("name").Selection("friendsConnection", fgql.WithArguments(
+		fgql.NewArgument("first", fgql.NewVariableValue("first")),
 	)).Scalar("totalCount").Selection("edges").Selection("node").Scalar("name").
 		Root().String()
 
@@ -78,7 +78,7 @@ func main() {
 		}),
 	})
 
-	printer.Print(a)
-	// fmt.Println(printer.Print(a))
+	// printer.Print(a)
+	fmt.Println(printer.Print(a))
 
 }
