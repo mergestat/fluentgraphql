@@ -1,6 +1,6 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/mergestat/fluentgraphql.svg)](https://pkg.go.dev/github.com/mergestat/fluentgraphql)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mergestat/fluentgraphql)](https://goreportcard.com/report/github.com/mergestat/fluentgraphql)
-
+[![codecov](https://codecov.io/gh/mergestat/fluentgraphql/branch/main/graph/badge.svg?token=1HTURZGWIL)](https://codecov.io/gh/mergestat/fluentgraphql)
 
 # fluentgraphql
 
