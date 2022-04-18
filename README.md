@@ -16,11 +16,6 @@ import (
 )
 
 func main() {
-    fgql.NewQuery().Scalar("hello").Root().String()
-    /*
-		{
-			hello
-		}
-	*/
+    fgql.NewQuery().Scalar("hello").Root().String() // { hello }
 }
 ```
