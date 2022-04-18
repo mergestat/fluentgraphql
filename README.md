@@ -1,3 +1,6 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/mergestat/fluentgraphql.svg)](https://pkg.go.dev/github.com/mergestat/fluentgraphql)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mergestat/fluentgraphql)](https://goreportcard.com/report/github.com/mergestat/fluentgraphql)
+
 # fluentgraphql
 
 This package wraps the [graphql-go/graphql](https://github.com/graphql-go/graphql) implementation to provide a "fluent" pattern for constructing GraphQL queries in Go.
