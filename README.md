@@ -88,3 +88,5 @@ q = fgql.NewQuery(
     Root().String()
 fmt.Println(q)
 ```
+Note the call to `.Root().String()`.
+`Root()` traverses the builder tree back to the root, so that when `String()` is called, the *entire* query is printed as a string.
