@@ -90,3 +90,55 @@ fmt.Println(q)
 ```
 Note the call to `.Root().String()`.
 `Root()` traverses the builder tree back to the root, so that when `String()` is called, the *entire* query is printed as a string.
+
+### Batching Requests
+A use case where a fluent interface is valuable is when dynamically generating a "batch" of queries to make to a GraphQL API.
+For instance, in the `github-batch-request` example, we can build a query that retrieves the `stargazerCount` field of multiple, arbitrary repositories at once.
+This allows us to batch multiple lookups into a single HTTP request, avoiding multiple round-trip requests.
+
+```golang
+q := fgql.NewQuery()
+
+// iterate over the list of repos and add a selection to the query for each one
+for i, repo := range repoList {
+    split := strings.Split(repo, "/")
+    owner := split[0]
+    name := split[1]
+
+    q.Selection("repository", fgql.WithAlias(fmt.Sprintf("repo_%d", i)), fgql.WithArguments(
+        fgql.NewArgument("owner", fgql.NewStringValue(owner)),
+        fgql.NewArgument("name", fgql.NewStringValue(name)),
+    )).
+        Selection("owner").Scalar("login").Parent().
+        Scalar("name").Scalar("stargazerCount")
+}
+```
+
+Produces a query that looks something like:
+
+```graphql
+{
+  repo_0: repository(owner: "marko-js", name: "marko") {
+    owner {
+      login
+    }
+    name
+    stargazerCount
+  }
+  repo_1: repository(owner: "mithriljs", name: "mithril.js") {
+    owner {
+      login
+    }
+    name
+    stargazerCount
+  }
+  repo_2: repository(owner: "angular", name: "angular") {
+    owner {
+      login
+    }
+    name
+    stargazerCount
+  }
+  ...
+}
+```
