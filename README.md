@@ -93,7 +93,7 @@ Note the call to `.Root().String()`.
 
 ### Batching Requests
 A use case where a fluent interface is valuable is when dynamically generating a "batch" of queries to make to a GraphQL API.
-For instance, in the `github-batch-request` example, we can build a query that retrieves the `stargazerCount` field of multiple, arbitrary repositories at once.
+For instance, in the [`github-batch-request` example](https://github.com/mergestat/fluentgraphql/blob/main/examples/github-batch-request/main.go), we can build a query that retrieves the `stargazerCount` field of multiple, arbitrary repositories at once.
 This allows us to batch multiple lookups into a single HTTP request, avoiding multiple round-trip requests.
 
 ```golang
