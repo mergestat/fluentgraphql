@@ -56,6 +56,7 @@ func WithName(name string) operationOption {
 			n.Name = ast.NewName(&ast.Name{
 				Value: name,
 			})
+			n.VariableDefinitions = make([]*ast.VariableDefinition, 0)
 		}
 	}
 }
@@ -143,6 +144,8 @@ func (s *Selection) Selection(fieldName string, options ...selectionOption) *Sel
 		node: ast.NewField(&ast.Field{
 			Name:         ast.NewName(&ast.Name{Value: fieldName}),
 			SelectionSet: ast.NewSelectionSet(&ast.SelectionSet{}),
+			Arguments:    make([]*ast.Argument, 0),
+			Directives:   make([]*ast.Directive, 0),
 		}),
 	}
 	switch n := s.node.(type) {
