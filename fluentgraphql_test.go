@@ -3,12 +3,13 @@ package fluentgraphql
 import (
 	"testing"
 
-	"github.com/go-test/deep"
+	"github.com/google/go-cmp/cmp"
 	"github.com/graphql-go/graphql/language/ast"
 	"github.com/graphql-go/graphql/language/parser"
 )
 
-func queryMatchesTree(t *testing.T, query string, root ast.Node) []string {
+func queryMatchesTree(t *testing.T, query string, root ast.Node) string {
+	t.Helper()
 	opts := parser.ParseOptions{
 		NoSource:   true,
 		NoLocation: true,
@@ -26,7 +27,7 @@ func queryMatchesTree(t *testing.T, query string, root ast.Node) []string {
 		Definitions: []ast.Node{root},
 	})
 
-	return deep.Equal(document, expectedDocument)
+	return cmp.Diff(expectedDocument, document)
 }
 
 func TestSelections(t *testing.T) {
@@ -73,14 +74,52 @@ func TestSelections(t *testing.T) {
 			wantedQuery: `{ hello(arg1: $var1) }`,
 			selection:   NewQuery().Scalar("hello", WithArguments(NewArgument("arg1", NewVariableValue("var1")))),
 		},
+		"SingleScalarWithQueryName": {
+			wantedQuery: `query SomeName { hello }`,
+			selection:   NewQuery(WithName("SomeName")).Scalar("hello"),
+		},
+		"SingleScalarWithAlias": {
+			wantedQuery: `{ someAlias: hello }`,
+			selection:   NewQuery().Scalar("hello", WithAlias("someAlias")),
+		},
+		"SingleScalarWithVariable": {
+			wantedQuery: `query($a: string) { hello }`,
+			selection:   NewQuery(WithVariableDefinitions(NewVariableDefinition("a", "string", false, nil))).Scalar("hello"),
+		},
+		"SingleScalarWithVariableAndName": {
+			wantedQuery: `query NamedQuery($a: string) { hello }`,
+			selection:   NewQuery(WithName("NamedQuery"), WithVariableDefinitions(NewVariableDefinition("a", "string", false, nil))).Scalar("hello"),
+		},
+		"SubSelection": {
+			wantedQuery: `{ hello { world } }`,
+			selection:   NewQuery().Selection("hello").Scalar("world"),
+		},
 	} {
 		t.Run(name, func(t *testing.T) {
 			root := testCase.selection.Root()
-			if diffs := queryMatchesTree(t, testCase.wantedQuery, root.node); diffs != nil {
-				for _, diff := range diffs {
-					t.Log(diff)
-				}
-				t.Fatalf("produced GraphQL query does not match what's wanted: found %d diffs, should be none", len(diffs))
+			if diff := queryMatchesTree(t, testCase.wantedQuery, root.node); diff != "" {
+				t.Log("produced GraphQL query does not match what's wanted", diff)
+				t.Fatal()
+			}
+		})
+	}
+}
+
+func TestMutations(t *testing.T) {
+	for name, testCase := range map[string]struct {
+		wantedQuery string
+		selection   *Selection
+	}{
+		"SingleScalar": {
+			wantedQuery: `mutation { hello }`,
+			selection:   NewMutation().Scalar("hello"),
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := testCase.selection.Root()
+			if diff := queryMatchesTree(t, testCase.wantedQuery, root.node); diff != "" {
+				t.Log("produced GraphQL query does not match what's wanted", diff)
+				t.Fatal()
 			}
 		})
 	}
